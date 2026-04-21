@@ -1,12 +1,7 @@
 <?php get_header(); ?>
 
-<main class="landing-page">
-    <section class="hero">
-        <div class="container">
-            <h1>Landing Page</h1>
-            <p>Initial local setup is working.</p>
-        </div>
-    </section>
+<main class="landing-page" id="main-content">
+    <?php get_template_part('template-parts/sections/hero'); ?>
 </main>
 
 <?php get_footer(); ?>

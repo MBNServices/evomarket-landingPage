@@ -1,0 +1,135 @@
+@media (max-width: 1200px) {
+    .site-header__nav {
+        flex-basis: auto;
+        width: auto;
+    }
+
+    .site-header__menu {
+        gap: 28px;
+    }
+
+    .hero-panel {
+        min-height: 620px;
+        border-radius: 40px 40px 0 0;
+    }
+
+    .hero-content__title-image {
+        width: min(700px, 100%);
+    }
+
+    .hero-services {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 900px) {
+    .container {
+        width: min(100%, calc(100% - 24px));
+    }
+
+    .site-header__inner {
+        flex-wrap: wrap;
+        justify-content: center;
+        padding: 14px 0;
+    }
+
+    .site-header__nav {
+        order: 3;
+        width: 100%;
+    }
+
+    .site-header__menu {
+        flex-wrap: wrap;
+        gap: 18px 22px;
+    }
+
+    .hero-content {
+        padding: 72px 18px 0;
+    }
+
+    .hero-panel {
+        min-height: 520px;
+        border-radius: 28px 28px 0 0;
+    }
+
+    .hero-content__title-image {
+        width: min(560px, 100%);
+    }
+
+    .hero-content__cta-image {
+        width: 136px;
+    }
+
+    .hero-panel__earth {
+        width: 122%;
+    }
+
+    .service-card {
+        min-height: 280px;
+        padding: 24px 20px;
+    }
+
+    .service-card__title {
+        font-size: 46px;
+    }
+
+    .service-card__title--small {
+        font-size: 28px;
+    }
+}
+
+@media (max-width: 640px) {
+    .site-header__logo {
+        width: 156px;
+    }
+
+    .site-header__cta {
+        width: auto;
+        min-width: 128px;
+        height: 46px;
+        padding: 7px 28px;
+        font-size: 16px;
+    }
+
+    .landing-page {
+        padding-top: 12px;
+    }
+
+    .hero-panel {
+        min-height: 420px;
+    }
+
+    .hero-content {
+        padding-top: 52px;
+    }
+
+    .hero-content__title-image {
+        width: min(430px, 100%);
+    }
+
+    .hero-content__cta-image {
+        width: 126px;
+    }
+
+    .hero-panel__earth {
+        width: 142%;
+    }
+
+    .hero-services {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+
+    .service-card {
+        min-height: 240px;
+        border-radius: 24px;
+    }
+
+    .service-card__title {
+        font-size: 40px;
+    }
+
+    .service-card__title--small {
+        font-size: 26px;
+    }
+}
