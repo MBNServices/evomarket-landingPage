@@ -1,25 +1,28 @@
 <?php
 
 function evomarket_enqueue_assets() {
+    $theme_directory = get_template_directory();
+    $theme_uri       = get_template_directory_uri();
+
     wp_enqueue_style(
         'evomarket-main-style',
-        get_template_directory_uri() . '/assets/css/main.css',
+        $theme_uri . '/assets/css/main.css',
         array(),
-        '1.0'
+        filemtime($theme_directory . '/assets/css/main.css')
     );
 
     wp_enqueue_style(
         'evomarket-responsive-style',
-        get_template_directory_uri() . '/assets/css/responsive.css',
+        $theme_uri . '/assets/css/responsive.css',
         array('evomarket-main-style'),
-        '1.0'
+        filemtime($theme_directory . '/assets/css/responsive.css')
     );
 
     wp_enqueue_script(
         'evomarket-main-script',
-        get_template_directory_uri() . '/assets/js/main.js',
+        $theme_uri . '/assets/js/main.js',
         array(),
-        '1.0',
+        filemtime($theme_directory . '/assets/js/main.js'),
         true
     );
 }
