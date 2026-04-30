@@ -7,7 +7,6 @@
 
 $asset_base = get_template_directory_uri() . '/assets/images/landing';
 $view_project_label = 'צפייה בפרויקט';
-$project_description = 'טקסט זה הוא דוגמה לטקסט שניתן להחליף באותו חלל.טקסט זה נוצר ממחולל הטקסט בערבית,';
 $project_tags = array('תחזוקה', 'פיתוח', 'UX/UI');
 
 $rows = array(
@@ -15,31 +14,29 @@ $rows = array(
         'title'          => 'אתרים מורכבים',
         'projects'       => array(
             array(
-                'image'             => 'project-devices.jpg',
+                'image'             => 'project-otlesegula.png',
                 'alt'               => 'OtLesegula - אות לסגולה',
                 'image_fit'         => 'contain',
                 'card_title'        => 'OtLesegula  -  אות לסגולה',
-                'description'       => $project_description,
+                'description'       => 'אות לסגולה הוא אתר ייחודי המאפשר לגולשים למצוא את שמם או ביטוי אישי בתוך פסוקי התורה, לבחור פסוק פנוי, ולהקדיש אות, מילה או פסוק כסגולה לברכה, שמירה והצלחה. המערכת כוללת חיפוש חכם בעברית, מנגנון בחירה והזמנה, חיבור לתשלום, והפקת תעודה אישית מעוצבת עם פרטי ההקדשה.',
                 'tags'              => $project_tags,
                 'modal_title'       => 'OtLesegula - אות לסגולה',
-                'modal_description' => $project_description,
+                'modal_description' => 'אות לסגולה הוא אתר ייחודי המאפשר לגולשים למצוא את שמם או ביטוי אישי בתוך פסוקי התורה, לבחור פסוק פנוי, ולהקדיש אות, מילה או פסוק כסגולה לברכה, שמירה והצלחה. המערכת כוללת חיפוש חכם בעברית, מנגנון בחירה והזמנה, חיבור לתשלום, והפקת תעודה אישית מעוצבת עם פרטי ההקדשה.',
                 'modal_images'      => array(
-                    array('image' => 'project-devices.jpg', 'alt' => 'OtLesegula - אות לסגולה'),
-                    array('image' => 'project-hotel.jpg', 'alt' => 'SuperCatalog - סופר קטלוג'),
+                    array('image' => 'project-otlesegula.png', 'alt' => 'OtLesegula - אות לסגולה'),
                 ),
             ),
             array(
-                'image'             => 'project-hotel.jpg',
+                'image'             => 'project-supercatalog.png',
                 'alt'               => 'SuperCatalog - סופר קטלוג',
                 'image_fit'         => 'contain',
                 'card_title'        => 'SuperCatalog  -  סופר קטלוג',
-                'description'       => $project_description,
+                'description'       => 'מערכת ניהול מתקדמת שפותחה בהתאמה אישית לעסקים עם קטלוגי מוצרים גדולים. הפרויקט כלל פיתוח מסכי ספירת מלאי, ניהול קטלוג, הזמנות מספקים, סריקת ברקודים דרך מצלמת מובייל, חיבורי API פנימיים, עבודה עם קבצי Excel, שימוש במבני JSON לניהול נתונים מורכבים, שמירת היסטוריות, סינון מידע והפקת דוחות.',
                 'tags'              => $project_tags,
                 'modal_title'       => 'SuperCatalog - סופר קטלוג',
-                'modal_description' => $project_description,
+                'modal_description' => 'מערכת ניהול מתקדמת שפותחה בהתאמה אישית לעסקים עם קטלוגי מוצרים גדולים. הפרויקט כלל פיתוח מסכי ספירת מלאי, ניהול קטלוג, הזמנות מספקים, סריקת ברקודים דרך מצלמת מובייל, חיבורי API פנימיים, עבודה עם קבצי Excel, שימוש במבני JSON לניהול נתונים מורכבים, שמירת היסטוריות, סינון מידע והפקת דוחות.',
                 'modal_images'      => array(
-                    array('image' => 'project-hotel.jpg', 'alt' => 'SuperCatalog - סופר קטלוג'),
-                    array('image' => 'project-devices.jpg', 'alt' => 'OtLesegula - אות לסגולה'),
+                    array('image' => 'project-supercatalog.png', 'alt' => 'SuperCatalog - סופר קטלוג'),
                 ),
             ),
         ),
@@ -48,30 +45,29 @@ $rows = array(
         'title'          => '',
         'projects'       => array(
             array(
-                'image'             => 'project-hotel.jpg',
+                'image'             => 'project-halalitcar.png',
                 'alt'               => 'HalalitCar - חללית קאר',
                 'image_fit'         => 'contain',
                 'card_title'        => 'HalalitCar  -  חללית קאר',
-                'description'       => $project_description,
+                'description'       => 'מערכת ניהול רכבים שפותחה ב־React עבור מגרש רכבים, ומאפשרת לנהל את מלאי הרכבים, לעדכן פרטים, לעקוב אחרי סטטוס הרכב ולהציג את הנתונים בצורה נוחה ומהירה.',
                 'tags'              => $project_tags,
                 'modal_title'       => 'HalalitCar - חללית קאר',
-                'modal_description' => $project_description,
+                'modal_description' => 'מערכת ניהול רכבים שפותחה ב־React עבור מגרש רכבים, ומאפשרת לנהל את מלאי הרכבים, לעדכן פרטים, לעקוב אחרי סטטוס הרכב ולהציג את הנתונים בצורה נוחה ומהירה.',
                 'modal_images'      => array(
-                    array('image' => 'project-hotel.jpg', 'alt' => 'HalalitCar - חללית קאר'),
-                    array('image' => 'project-devices.jpg', 'alt' => 'MedicalHerbs - המרכז לרפואה טבעית'),
+                    array('image' => 'project-halalitcar.png', 'alt' => 'HalalitCar - חללית קאר'),
                 ),
             ),
             array(
-                'image'             => 'project-devices.jpg',
+                'image'             => 'project-medicalherbs.png',
                 'alt'               => 'MedicalHerbs - המרכז לרפואה טבעית',
                 'image_fit'         => 'contain',
                 'card_title'        => 'MedicalHerbs  -  המרכז לרפואה טבעית',
-                'description'       => $project_description,
+                'description'       => 'אתר לימודי עבור המרכז לרפואה טבעית, הכולל מערכת למידה לסטודנטים, אזורי תוכן, שיעורים, חומרי לימוד וגישה מסודרת לקורסים דרך ממשק נוח ומותאם למובייל.',
                 'tags'              => $project_tags,
                 'modal_title'       => 'MedicalHerbs - המרכז לרפואה טבעית',
-                'modal_description' => $project_description,
+                'modal_description' => 'אתר לימודי עבור המרכז לרפואה טבעית, הכולל מערכת למידה לסטודנטים, אזורי תוכן, שיעורים, חומרי לימוד וגישה מסודרת לקורסים דרך ממשק נוח ומותאם למובייל.',
                 'modal_images'      => array(
-                    array('image' => 'project-devices.jpg', 'alt' => 'MedicalHerbs - המרכז לרפואה טבעית'),
+                    array('image' => 'project-medicalherbs.png', 'alt' => 'MedicalHerbs - המרכז לרפואה טבעית'),
                 ),
             ),
         ),
@@ -80,32 +76,29 @@ $rows = array(
         'title'          => 'חנויות אינטרנטיות',
         'projects'       => array(
             array(
-                'image'             => 'project-hotel.jpg',
+                'image'             => 'project-medicalherbs.png',
                 'alt'               => 'MedicalHerbs - המרכז לרפואה טבעית',
                 'image_fit'         => 'contain',
-                'extra_image'       => 'project-course-overlay.png',
                 'card_title'        => 'MedicalHerbs  -  המרכז לרפואה טבעית',
-                'description'       => $project_description,
+                'description'       => 'טקסט זה הוא דוגמה לטקסט שניתן להחליף באותו חלל.טקסט זה נוצר ממחולל הטקסט בערבית,',
                 'tags'              => $project_tags,
                 'modal_title'       => 'MedicalHerbs - המרכז לרפואה טבעית',
-                'modal_description' => $project_description,
+                'modal_description' => 'טקסט זה הוא דוגמה לטקסט שניתן להחליף באותו חלל.טקסט זה נוצר ממחולל הטקסט בערבית,',
                 'modal_images'      => array(
-                    array('image' => 'project-hotel.jpg', 'alt' => 'MedicalHerbs - המרכז לרפואה טבעית'),
-                    array('image' => 'project-devices.jpg', 'alt' => 'Hafistuk - הפיסטוק'),
+                    array('image' => 'project-medicalherbs.png', 'alt' => 'MedicalHerbs - המרכז לרפואה טבעית'),
                 ),
             ),
             array(
-                'image'             => 'project-devices.jpg',
+                'image'             => 'project-hafistuk.png',
                 'alt'               => 'Hafistuk - הפיסטוק',
                 'image_fit'         => 'cover',
                 'card_title'        => 'Hafistuk  -  הפיסטוק',
-                'description'       => $project_description,
+                'description'       => 'חנות אינטרנטית למוצרי פיצוחים, תבלינים ומזון יבש, עם קטלוג מוצרים ברור, עיצוב מותאם למותג, חוויית קנייה פשוטה וניהול מלאי ומוצרים דרך WooCommerce.',
                 'tags'              => $project_tags,
                 'modal_title'       => 'Hafistuk - הפיסטוק',
-                'modal_description' => $project_description,
+                'modal_description' => 'חנות אינטרנטית למוצרי פיצוחים, תבלינים ומזון יבש, עם קטלוג מוצרים ברור, עיצוב מותאם למותג, חוויית קנייה פשוטה וניהול מלאי ומוצרים דרך WooCommerce.',
                 'modal_images'      => array(
-                    array('image' => 'project-devices.jpg', 'alt' => 'Hafistuk - הפיסטוק'),
-                    array('image' => 'project-hotel.jpg', 'alt' => 'MedicalHerbs - המרכז לרפואה טבעית'),
+                    array('image' => 'project-hafistuk.png', 'alt' => 'Hafistuk - הפיסטוק'),
                 ),
             ),
         ),
