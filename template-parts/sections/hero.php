@@ -46,7 +46,7 @@ $service_cards = array(
 <section class="hero-section" id="top" aria-labelledby="hero-title">
     <div class="hero-panel">
         <img
-            class="hero-panel__background"
+            class="hero-panel__background reveal reveal-scale"
             src="<?php echo esc_url($asset_base . '/hero-bg.png'); ?>"
             alt=""
             aria-hidden="true"
@@ -56,14 +56,17 @@ $service_cards = array(
             <div class="hero-content__title-block">
                 <p class="hero-content__welcome">ברוכים הבאים</p>
                 <div class="hero-content__stack">
-                    <h1 class="hero-content__title" id="hero-title">
-                        <span class="hero-content__title-main">EVO</span>
-                        <span class="hero-content__title-outline">Market</span>
+                    <h1 class="hero-content__title reveal reveal-scale" id="hero-title" style="--reveal-delay: 160ms;">
+                        <img
+                            class="hero-content__title-image"
+                            src="<?php echo esc_url($asset_base . '/hero-title.png'); ?>"
+                            alt="EVO MARKET"
+                        >
                     </h1>
                     <p class="hero-content__subtitle">פתרונות דיגיטליים חכמים: אתרים, חנויות ומערכות מתקדמות</p>
                 </div>
             </div>
-            <a class="hero-content__cta" href="#contact">
+            <a class="hero-content__cta reveal reveal-up" href="#contact" style="--reveal-delay: 360ms;">
                 <span>התחל עכשיו</span>
                 <img src="<?php echo esc_url($asset_base . '/icon-arrow-start.svg'); ?>" alt="" aria-hidden="true">
             </a>
@@ -71,8 +74,8 @@ $service_cards = array(
     </div>
 
     <div class="hero-services" id="services" aria-label="השירותים שלנו">
-        <?php foreach ($service_cards as $card) : ?>
-            <article class="service-card service-card--<?php echo esc_attr($card['modifier']); ?>">
+        <?php foreach ($service_cards as $card_index => $card) : ?>
+            <article class="service-card service-card--<?php echo esc_attr($card['modifier']); ?> reveal reveal-up" style="--reveal-index: <?php echo esc_attr($card_index); ?>;">
                 <div class="service-card__content">
                     <div class="service-card__top">
                         <p class="service-card__top-heading"><?php echo esc_html($card['top_heading']); ?></p>

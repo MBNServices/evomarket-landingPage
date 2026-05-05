@@ -13,12 +13,8 @@ $contact_items = array(
         'type'  => 'phone',
     ),
     array(
-        'value' => 'gmail@gmail.com',
+        'value' => 'info@EvoMarket.info',
         'type'  => 'mail',
-    ),
-    array(
-        'value' => 'מונטיפיורי 14, הרצליה',
-        'type'  => 'location',
     ),
 );
 ?>
@@ -30,22 +26,17 @@ $contact_items = array(
 
             <div class="contact-form__row">
                 <label class="contact-form__field">
-                    <span class="contact-form__label">שם משפחה</span>
-                    <input type="text" name="last_name" placeholder="הזן שם משפחה">
+                    <span class="contact-form__label">שם החברה</span>
+                    <input type="text" name="company_name" placeholder="לדוגמא: מנופים בע”מ">
                 </label>
 
                 <label class="contact-form__field">
-                    <span class="contact-form__label">שם פרטי</span>
-                    <input type="text" name="first_name" placeholder="הזן שם פרטי">
+                    <span class="contact-form__label">שם מלא</span>
+                    <input type="text" name="full_name" placeholder="לדוגמא: שלמה ארצי">
                 </label>
             </div>
 
-            <div class="contact-form__row">
-                <label class="contact-form__field">
-                    <span class="contact-form__label">דוא”ל</span>
-                    <input type="email" name="email" placeholder="הזן כתובת דוא”ל">
-                </label>
-
+            <div class="contact-form__row contact-form__row--single">
                 <label class="contact-form__field">
                     <span class="contact-form__label">טלפון</span>
                     <span class="contact-form__phone-wrap">
@@ -61,7 +52,7 @@ $contact_items = array(
             <label class="contact-form__field contact-form__field--message">
                 <span class="contact-form__label">הודעה</span>
                 <span class="contact-form__textarea-wrap">
-                    <textarea name="message" rows="5" placeholder="ספר לנו על הפרוייקט שלך..."></textarea>
+                    <textarea name="message" rows="5" placeholder="שניה לפני שאנחנו מדברים, נשמח שתספר/י לנו בקצרה כיצד נוכל לעזור לך (-:"></textarea>
                     <img class="contact-form__textarea-handle" src="<?php echo esc_url($asset_base . '/icon-textarea-handle.svg'); ?>" alt="" aria-hidden="true">
                 </span>
             </label>
@@ -83,7 +74,7 @@ $contact_items = array(
         <div class="contact-info">
             <header class="contact-info__header">
                 <h2 class="contact-info__title" id="contact-title">אנו נשמח לעמוד לרשותך!</h2>
-                <p class="contact-info__text">טקסט הפסקה משמש כדוגמה למילוי עבור תבנית. ניתן להחליף טקסט זה בתוכן אמיתי.</p>
+                <p class="contact-info__text">אתר תדמית, חנות אונליין, מערכת ניהול, פלטפורמת למידה או פתרון מותאם אישית, נתחיל מהצורך העסקי ונבנה יחד תהליך נכון.</p>
             </header>
 
             <div class="contact-info__list">

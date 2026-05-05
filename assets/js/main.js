@@ -1,12 +1,104 @@
 document.addEventListener("DOMContentLoaded", function () {
+    var reduceMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    var reduceMotion = reduceMotionQuery.matches;
+
+    function updateMotionPreference(event) {
+        reduceMotion = event.matches;
+
+        if (reduceMotion) {
+            document.querySelectorAll(".reveal").forEach(function (element) {
+                element.classList.add("is-visible");
+            });
+        }
+
+        if (typeof setClientsMarquee === "function") {
+            setClientsMarquee();
+        }
+    }
+
+    if (reduceMotionQuery.addEventListener) {
+        reduceMotionQuery.addEventListener("change", updateMotionPreference);
+    } else if (reduceMotionQuery.addListener) {
+        reduceMotionQuery.addListener(updateMotionPreference);
+    }
+
+    var revealItems = document.querySelectorAll(".reveal");
+
+    if (revealItems.length) {
+        if (reduceMotion || !("IntersectionObserver" in window)) {
+            revealItems.forEach(function (element) {
+                element.classList.add("is-visible");
+            });
+        } else {
+            var revealObserver = new IntersectionObserver(function (entries, observer) {
+                entries.forEach(function (entry) {
+                    if (!entry.isIntersecting) {
+                        return;
+                    }
+
+                    entry.target.classList.add("is-visible");
+                    observer.unobserve(entry.target);
+                });
+            }, {
+                rootMargin: "0px 0px -10% 0px",
+                threshold: 0.12
+            });
+
+            revealItems.forEach(function (element) {
+                revealObserver.observe(element);
+            });
+        }
+    }
+
+    var siteHeader = document.querySelector(".site-header");
+
+    function setHeaderScrollState() {
+        if (!siteHeader) {
+            return;
+        }
+
+        siteHeader.classList.toggle("is-scrolled", window.scrollY > 24);
+    }
+
+    setHeaderScrollState();
+    window.addEventListener("scroll", setHeaderScrollState, { passive: true });
+
     document.querySelectorAll(".landing-form, .footer-subscribe").forEach(function (form) {
         form.addEventListener("submit", function (event) {
+            if (form.classList.contains("landing-footer__form")) {
+                var recipient = form.getAttribute("data-footer-mailto");
+                var fields = Array.prototype.slice.call(form.elements).filter(function (field) {
+                    return field.name && field.type !== "checkbox";
+                });
+                var body = fields.map(function (field) {
+                    return field.name + ": " + field.value;
+                }).join("\n");
+
+                event.preventDefault();
+                window.location.href = "mailto:" + recipient + "?subject=" + encodeURIComponent("פניה חדשה מאתר EvoMarket") + "&body=" + encodeURIComponent(body);
+                return;
+            }
+
             event.preventDefault();
         });
     });
 
     var menuToggle = document.querySelector(".site-header__menu-toggle");
     var navLinks = document.querySelectorAll(".site-header__menu a");
+    var navTargets = Array.prototype.slice.call(navLinks).map(function (link) {
+        var href = link.getAttribute("href") || "";
+
+        if (href.charAt(0) !== "#") {
+            return null;
+        }
+
+        var target = document.querySelector(href);
+
+        return target ? {
+            link: link,
+            target: target
+        } : null;
+    }).filter(Boolean);
 
     if (menuToggle) {
         menuToggle.addEventListener("click", function () {
@@ -19,6 +111,36 @@ document.addEventListener("DOMContentLoaded", function () {
                 document.body.classList.remove("site-nav-open");
                 menuToggle.setAttribute("aria-expanded", "false");
             });
+        });
+    }
+
+    if (navTargets.length && "IntersectionObserver" in window) {
+        var activeSectionObserver = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+                if (!entry.isIntersecting) {
+                    return;
+                }
+
+                navLinks.forEach(function (link) {
+                    link.classList.remove("is-active");
+                });
+
+                navTargets.some(function (item) {
+                    if (item.target === entry.target) {
+                        item.link.classList.add("is-active");
+                        return true;
+                    }
+
+                    return false;
+                });
+            });
+        }, {
+            rootMargin: "-28% 0px -58% 0px",
+            threshold: 0
+        });
+
+        navTargets.forEach(function (item) {
+            activeSectionObserver.observe(item.target);
         });
     }
 
@@ -107,7 +229,7 @@ document.addEventListener("DOMContentLoaded", function () {
         marqueeFrame = null;
         marqueeLastTime = 0;
 
-        if (mobileQuery.matches) {
+        if (mobileQuery.matches && !reduceMotion) {
             resetClientsTrack();
             fillClientsMarqueeTrack();
             marqueeOffset = 0;
@@ -151,6 +273,13 @@ document.addEventListener("DOMContentLoaded", function () {
         var closeTargets = worksModal.querySelectorAll("[data-modal-close]");
         var titleEl = worksModal.querySelector("#works-modal-title");
         var descriptionEl = worksModal.querySelector("#works-modal-description");
+        var subtitleEl = worksModal.querySelector("[data-modal-subtitle]");
+        var highlightsEl = worksModal.querySelector("[data-modal-highlights]");
+        var specialSectionEl = worksModal.querySelector("[data-modal-special-section]");
+        var specialTitleEl = worksModal.querySelector("[data-modal-special-title]");
+        var specialCardsEl = worksModal.querySelector("[data-modal-special-cards]");
+        var featuresEl = worksModal.querySelector("[data-modal-features]");
+        var techTagsEl = worksModal.querySelector("[data-modal-tech-tags]");
         var trackEl = worksModal.querySelector("[data-modal-track]");
         var controlsEl = worksModal.querySelector("[data-modal-controls]");
         var dotsEl = worksModal.querySelector("[data-modal-dots]");
@@ -161,6 +290,7 @@ document.addEventListener("DOMContentLoaded", function () {
         var triggerEl = null;
         var touchStartX = null;
         var touchMoveX = null;
+        var closeTimer = null;
 
         function updateSliderPosition() {
             trackEl.style.transform = "translate3d(" + activeIndex * -100 + "%, 0, 0)";
@@ -190,6 +320,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 var img = document.createElement("img");
                 img.src = image.src || "";
                 img.alt = image.alt || "";
+                img.className = image.fit === "contain" ? "works-modal__image works-modal__image--contain" : "works-modal__image";
                 slide.appendChild(img);
                 trackEl.appendChild(slide);
 
@@ -210,19 +341,91 @@ document.addEventListener("DOMContentLoaded", function () {
             updateSliderPosition();
         }
 
-        function closeModal() {
-            worksModal.classList.remove("is-open");
-            worksModal.hidden = true;
-            document.body.classList.remove("works-modal-open");
+        function appendTextItem(parent, className, text, tagName) {
+            var item = document.createElement(tagName || "div");
+            item.className = className;
+            item.textContent = text || "";
+            parent.appendChild(item);
+            return item;
+        }
 
-            if (triggerEl) {
-                triggerEl.focus();
+        function renderHighlights(highlights) {
+            highlightsEl.innerHTML = "";
+
+            (highlights || []).forEach(function (highlight) {
+                var card = document.createElement("article");
+                card.className = "works-modal__highlight-card";
+
+                appendTextItem(card, "works-modal__highlight-marker", "", "span");
+                appendTextItem(card, "works-modal__highlight-title", highlight.title, "h4");
+                appendTextItem(card, "works-modal__highlight-text", highlight.text, "p");
+                highlightsEl.appendChild(card);
+            });
+
+            highlightsEl.hidden = !highlightsEl.children.length;
+        }
+
+        function renderSpecialCards(title, cards) {
+            specialTitleEl.textContent = title || "";
+            specialCardsEl.innerHTML = "";
+
+            (cards || []).forEach(function (cardData) {
+                var card = document.createElement("article");
+                card.className = "works-modal__special-card";
+
+                appendTextItem(card, "works-modal__special-title", cardData.title, "h5");
+                appendTextItem(card, "works-modal__special-text", cardData.text, "p");
+                specialCardsEl.appendChild(card);
+            });
+
+            specialSectionEl.hidden = !specialCardsEl.children.length;
+        }
+
+        function renderFeatures(features) {
+            featuresEl.innerHTML = "";
+
+            (features || []).forEach(function (feature) {
+                appendTextItem(featuresEl, "works-modal__feature", feature, "li");
+            });
+
+            if (featuresEl.parentElement) {
+                featuresEl.parentElement.hidden = !featuresEl.children.length;
             }
         }
 
+        function renderTechTags(tags) {
+            techTagsEl.innerHTML = "";
+
+            (tags || []).forEach(function (tag) {
+                appendTextItem(techTagsEl, "works-modal__tag", tag, "span");
+            });
+
+            techTagsEl.hidden = !techTagsEl.children.length;
+        }
+
+        function closeModal() {
+            worksModal.classList.remove("is-open");
+            document.body.classList.remove("works-modal-open");
+
+            window.clearTimeout(closeTimer);
+            closeTimer = window.setTimeout(function () {
+                worksModal.hidden = true;
+
+                if (triggerEl) {
+                    triggerEl.focus();
+                }
+            }, reduceMotion ? 0 : 220);
+        }
+
         function openModal(payload, sourceTrigger) {
+            window.clearTimeout(closeTimer);
             titleEl.textContent = payload.title || "";
-            descriptionEl.textContent = payload.description || "";
+            subtitleEl.textContent = payload.subtitle || "";
+            descriptionEl.textContent = payload.intro || payload.description || "";
+            renderHighlights(payload.highlights || []);
+            renderSpecialCards(payload.specialTitle || "", payload.specialCards || []);
+            renderFeatures(payload.features || []);
+            renderTechTags(payload.techTags || []);
             renderSlides(payload.images || []);
             triggerEl = sourceTrigger;
 

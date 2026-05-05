@@ -2,6 +2,46 @@
 @import url("https://fonts.googleapis.com/earlyaccess/opensanshebrewcondensed.css");
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@600&family=Rubik:wght@500&display=swap");
 
+@font-face {
+    font-family: "Evo Header Hebrew Condensed";
+    src: url("../fonts/OpenSansHebrewCondensed-ExtraBold.woff") format("woff");
+    font-style: normal;
+    font-weight: 800;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Evo About Hebrew";
+    src: url("../fonts/OpenSansHebrew-Regular.woff") format("woff");
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Evo About Hebrew Condensed";
+    src: url("../fonts/OpenSansHebrewCondensed-Regular.woff") format("woff");
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Evo About Hebrew Condensed";
+    src: url("../fonts/OpenSansHebrewCondensed-Bold.woff") format("woff");
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Evo About Hebrew Condensed";
+    src: url("../fonts/OpenSansHebrewCondensed-ExtraBold.woff") format("woff");
+    font-style: normal;
+    font-weight: 800;
+    font-display: swap;
+}
+
 :root {
     --color-bg: #051c2e;
     --color-panel: #07243a;
@@ -20,6 +60,12 @@
     --content-width: 1330px;
     --content-gutter: 55px;
     --section-gap: 96px;
+    --motion-fast: 180ms;
+    --motion-base: 520ms;
+    --motion-slow: 760ms;
+    --motion-ease: cubic-bezier(0.22, 1, 0.36, 1);
+    --motion-ease-soft: cubic-bezier(0.16, 1, 0.3, 1);
+    --focus-ring: 0 0 0 3px rgba(255, 145, 0, 0.28);
 }
 
 *,
@@ -30,6 +76,41 @@
 
 html {
     scroll-behavior: smooth;
+}
+
+.reveal {
+    --reveal-y: 24px;
+    --reveal-scale: 1;
+    --reveal-blur: 0;
+    --reveal-delay: calc(var(--reveal-index, 0) * 90ms);
+    opacity: 0;
+    transform: translate3d(0, var(--reveal-y), 0) scale(var(--reveal-scale));
+    filter: blur(var(--reveal-blur));
+    transition:
+        opacity var(--motion-base) var(--motion-ease),
+        transform var(--motion-slow) var(--motion-ease-soft),
+        filter var(--motion-base) var(--motion-ease);
+    transition-delay: var(--reveal-delay);
+}
+
+.reveal-up {
+    --reveal-y: 28px;
+}
+
+.reveal-fade {
+    --reveal-y: 0;
+}
+
+.reveal-scale {
+    --reveal-y: 12px;
+    --reveal-scale: 0.985;
+    --reveal-blur: 3px;
+}
+
+.reveal.is-visible {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+    filter: blur(0);
 }
 
 body {
@@ -87,7 +168,19 @@ textarea {
 }
 
 .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
     padding: 22px 57px 0;
+    transition: padding var(--motion-fast) ease, background-color var(--motion-fast) ease, box-shadow var(--motion-fast) ease;
+}
+
+.site-header.is-scrolled {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    background: rgba(5, 28, 46, 0.86);
+    box-shadow: 0 18px 46px rgba(0, 0, 0, 0.22);
+    backdrop-filter: blur(14px);
 }
 
 .site-header__inner {
@@ -169,20 +262,52 @@ textarea {
 }
 
 .site-header__menu a {
+    position: relative;
     display: inline-block;
-    font-family: "Open Sans Hebrew Condensed", Arial, sans-serif;
+    font-family: "Evo Header Hebrew Condensed", "Open Sans Hebrew Condensed", Arial, sans-serif;
+    font-style: normal;
     font-size: 20px;
     font-weight: 800;
     line-height: normal;
-    color: var(--color-text);
-    transition: color 0.2s ease;
+    letter-spacing: 0;
+    color: #ffffff;
+    font-synthesis: none;
+    text-rendering: geometricPrecision;
+    transition: color 0.2s ease, transform 0.2s ease;
     white-space: nowrap;
+}
+
+.site-header__menu a::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    bottom: -8px;
+    width: 100%;
+    height: 2px;
+    border-radius: 999px;
+    background: var(--color-accent);
+    opacity: 0;
+    transform: scaleX(0.35);
+    transform-origin: right center;
+    transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
 .site-header__menu a:hover,
 .site-header__menu a:focus-visible,
 .site-header__menu a.is-active {
-    color: var(--color-accent);
+    color: #ff9100;
+}
+
+.site-header__menu a:hover,
+.site-header__menu a:focus-visible {
+    transform: translateY(-1px);
+}
+
+.site-header__menu a:hover::after,
+.site-header__menu a:focus-visible::after,
+.site-header__menu a.is-active::after {
+    opacity: 1;
+    transform: scaleX(1);
 }
 
 .site-header__cta,
@@ -202,6 +327,23 @@ textarea {
     color: var(--color-text);
     box-shadow: var(--shadow-button);
     white-space: nowrap;
+    transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.site-header__cta:hover,
+.site-header__cta:focus-visible,
+.about-section__cta:hover,
+.about-section__cta:focus-visible {
+    border-color: var(--color-accent);
+    background: rgba(255, 145, 0, 0.12);
+    box-shadow: 0 0 0 4px rgba(255, 145, 0, 0.12), 0 16px 34px rgba(0, 0, 0, 0.18);
+    outline: none;
+    transform: translateY(-1px);
+}
+
+.site-header__cta:active,
+.about-section__cta:active {
+    transform: translateY(1px);
 }
 
 .site-header__cta {
@@ -258,6 +400,11 @@ textarea {
     max-width: none;
     object-fit: cover;
     object-position: center top;
+    transform-origin: center;
+}
+
+.hero-panel__background.is-visible {
+    animation: hero-ambient 9s ease-in-out infinite alternate;
 }
 
 .hero-content {
@@ -296,7 +443,7 @@ textarea {
     margin: 0;
     font-family: "Open Sans Hebrew Condensed", Arial, sans-serif;
     font-weight: 400;
-    color: var(--color-text);
+    color: #ffffff;
 }
 
 .hero-content__welcome {
@@ -306,36 +453,24 @@ textarea {
 }
 
 .hero-content__title {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    display: block;
     width: 100%;
     margin: 0;
-    padding-bottom: 138px;
+    padding-bottom: 0;
     font-family: "Open Sans Hebrew Condensed", Arial, sans-serif;
     font-weight: 800;
-    font-size: 230px;
+    font-size: 0;
     line-height: normal;
     letter-spacing: 0;
     text-transform: uppercase;
+    color: #ffffff;
 }
 
-.hero-content__title-main {
-    position: relative;
-    z-index: 1;
+.hero-content__title-image {
     display: block;
-    height: 219px;
-    margin-bottom: -138px;
-}
-
-.hero-content__title-outline {
-    display: block;
-    height: 260px;
     width: 100%;
-    margin-top: 0;
-    color: transparent;
-    -webkit-text-stroke: 1px var(--color-accent);
-    text-shadow: none;
+    max-width: 1326px;
+    height: auto;
 }
 
 .hero-content__subtitle {
@@ -367,16 +502,93 @@ textarea {
 
 .hero-content__cta {
     margin-top: 0;
+    box-shadow: 0 16px 30px rgba(0, 0, 0, 0.18);
+    transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+@media (min-width: 1025px) {
+    .hero-panel {
+        min-height: 801px;
+    }
+
+    .hero-panel__background {
+        top: -66.6%;
+        left: -0.2%;
+        width: 100.4%;
+        height: 202.4%;
+        object-position: 50% 0;
+    }
+
+    .hero-content {
+        padding-top: 120px;
+    }
+
+    .hero-content__title-block {
+        padding-bottom: 0;
+    }
+
+    .hero-content__stack {
+        gap: 27px;
+        margin-bottom: 0;
+    }
+
+    .hero-content__welcome {
+        margin-bottom: -32px;
+    }
+
+    .hero-content__subtitle {
+        margin-top: -5px;
+    }
+
+    .hero-content__cta {
+        margin-top: -16px;
+    }
 }
 
 .hero-content__cta img,
 .contact-form__submit img {
     width: 24px;
     height: 24px;
+    transition: transform 0.22s ease;
+}
+
+.hero-content__cta:hover,
+.hero-content__cta:focus-visible,
+.contact-form__submit:hover,
+.contact-form__submit:focus-visible {
+    background: #ffa426;
+    box-shadow: 0 0 0 5px rgba(255, 145, 0, 0.16), 0 18px 36px rgba(0, 0, 0, 0.22);
+    outline: none;
+    transform: translateY(-1px);
+}
+
+.hero-content__cta:hover img,
+.hero-content__cta:focus-visible img {
+    transform: translateX(-3px);
+}
+
+.contact-form__submit:hover img,
+.contact-form__submit:focus-visible img {
+    transform: rotate(180deg) translateX(-3px);
+}
+
+@keyframes hero-ambient {
+    from {
+        transform: translate3d(0, 0, 0) scale(1);
+    }
+
+    to {
+        transform: translate3d(0, -8px, 0) scale(1.018);
+    }
 }
 
 .contact-form__submit img {
     transform: rotate(180deg);
+}
+
+.contact-form__submit {
+    font-family: "Evo About Hebrew", "Open Sans Hebrew", Arial, sans-serif;
+    font-synthesis: none;
 }
 
 .hero-services {
@@ -401,6 +613,14 @@ textarea {
     background: var(--color-panel);
     direction: rtl;
     box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+    transition: transform var(--motion-base) var(--motion-ease), box-shadow var(--motion-base) ease, background-color var(--motion-base) ease;
+}
+
+.service-card:hover,
+.service-card:focus-within {
+    transform: translate3d(0, -8px, 0);
+    background: #092a44;
+    box-shadow: inset 0 0 0 1px rgba(255, 145, 0, 0.26), 0 24px 58px rgba(0, 0, 0, 0.2);
 }
 
 .service-card__content {
@@ -511,6 +731,7 @@ textarea {
     height: 28px;
     flex: 0 0 28px;
     opacity: 0.75;
+    transition: transform 0.25s ease, opacity 0.25s ease;
 }
 
 .service-card__lead--course {
@@ -539,6 +760,7 @@ textarea {
     width: 26px;
     height: 26px;
     opacity: 0.75;
+    transition: transform 0.35s ease, opacity 0.25s ease;
 }
 
 .service-card__dashboard-main,
@@ -594,6 +816,7 @@ textarea {
     height: 14px;
     flex: 0 0 14px;
     opacity: 0.72;
+    transition: transform 0.25s ease, opacity 0.25s ease;
 }
 
 .service-card__design-title {
@@ -605,6 +828,27 @@ textarea {
     height: 16px;
     flex: 0 0 16px;
     opacity: 0.75;
+    transition: transform 0.35s ease, opacity 0.25s ease;
+}
+
+.service-card:hover .service-card__course-arrow,
+.service-card:hover .service-card__ecommerce-arrow,
+.service-card:focus-within .service-card__course-arrow,
+.service-card:focus-within .service-card__ecommerce-arrow {
+    opacity: 1;
+    transform: translate3d(-4px, -4px, 0);
+}
+
+.service-card:hover .service-card__sparkles,
+.service-card:focus-within .service-card__sparkles {
+    opacity: 1;
+    transform: rotate(-8deg) scale(1.08);
+}
+
+.service-card:hover .service-card__loader-image,
+.service-card:focus-within .service-card__loader-image {
+    opacity: 1;
+    transform: rotate(32deg) scale(1.05);
 }
 
 .service-card__course-title,
@@ -728,25 +972,27 @@ textarea {
 
 .about-section__copy {
     width: 562px;
+    font-family: "Evo About Hebrew", "Open Sans Hebrew", Arial, sans-serif;
+    font-synthesis: none;
     direction: rtl;
 }
 
 .about-section__paragraph {
     margin: 0;
-    font-size: 22px;
-    line-height: 1.5;
-    max-width: 560px;
+    font-size: 20px;
+    line-height: 1.45;
+    max-width: 540px;
 }
 
 .about-section__paragraph + .about-section__paragraph {
-    margin-top: 33px;
+    margin-top: 18px;
 }
 
 .about-section__points {
     display: flex;
     flex-direction: column;
-    gap: 27px;
-    margin-top: 65px;
+    gap: 22px;
+    margin-top: 42px;
 }
 
 .about-point__header {
@@ -769,10 +1015,11 @@ textarea {
 
 .about-point__title {
     color: var(--color-accent);
-    font-family: "Open Sans Hebrew Condensed", Arial, sans-serif;
+    font-family: "Evo About Hebrew Condensed", "Open Sans Hebrew Condensed", Arial, sans-serif;
     font-size: 20px;
     font-weight: 700;
     line-height: 1.4;
+    font-synthesis: none;
 }
 
 .about-point__description {
@@ -799,10 +1046,11 @@ textarea {
 
 .about-section__title,
 .about-section__title-row {
-    font-family: "Open Sans Hebrew Condensed", Arial, sans-serif;
+    font-family: "Evo About Hebrew Condensed", "Open Sans Hebrew Condensed", Arial, sans-serif;
     font-size: 64px;
     font-weight: 800;
-    line-height: 1.2;
+    line-height: 1.12;
+    font-synthesis: none;
 }
 
 .about-section__title-row {
@@ -934,6 +1182,11 @@ textarea {
     cursor: pointer;
 }
 
+.project-card__trigger:hover .project-card__media,
+.project-card__trigger:focus-visible .project-card__media {
+    box-shadow: 0 22px 56px rgba(0, 0, 0, 0.28), 0 0 0 1px rgba(255, 145, 0, 0.26);
+}
+
 .project-card__trigger:focus-visible {
     outline: 2px solid var(--color-accent);
     outline-offset: 6px;
@@ -945,12 +1198,21 @@ textarea {
     height: 450px;
     overflow: hidden;
     border-radius: 34px;
+    background: rgba(255, 255, 255, 0.04);
+    transition: box-shadow var(--motion-base) ease, transform var(--motion-base) var(--motion-ease);
 }
 
 .project-card__image {
     width: 100%;
     height: 100%;
     object-fit: contain;
+    transition: transform var(--motion-slow) var(--motion-ease-soft), filter var(--motion-base) ease;
+}
+
+.project-card__trigger:hover .project-card__image,
+.project-card__trigger:focus-visible .project-card__image {
+    transform: scale(1.035);
+    filter: saturate(1.08) contrast(1.03);
 }
 
 .project-card__image--cover {
@@ -1025,12 +1287,14 @@ textarea {
     direction: rtl;
     white-space: nowrap;
     align-self: flex-start;
+    transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
 .project-card__cta img {
     width: 24px;
     height: 24px;
     transform: rotate(180deg);
+    transition: transform 0.22s ease;
 }
 
 .project-card__tag {
@@ -1042,6 +1306,31 @@ textarea {
     font-size: 14px;
     font-weight: 600;
     line-height: 1.5;
+    transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+}
+
+.project-card__trigger:hover .project-card__cta,
+.project-card__trigger:focus-visible .project-card__cta {
+    border-color: var(--color-accent);
+    background: rgba(255, 145, 0, 0.12);
+    box-shadow: 0 0 0 4px rgba(255, 145, 0, 0.12);
+    transform: translateY(-1px);
+}
+
+.project-card__trigger:active .project-card__cta {
+    transform: translateY(1px);
+}
+
+.project-card__trigger:hover .project-card__cta img,
+.project-card__trigger:focus-visible .project-card__cta img {
+    transform: rotate(180deg) translateX(-3px);
+}
+
+.project-card__trigger:hover .project-card__tag,
+.project-card__trigger:focus-visible .project-card__tag {
+    border-color: rgba(255, 145, 0, 0.7);
+    background: rgba(255, 145, 0, 0.08);
+    color: #ffb553;
 }
 
 .works-modal {
@@ -1052,6 +1341,12 @@ textarea {
     align-items: center;
     justify-content: center;
     padding: 40px;
+    opacity: 0;
+    transition: opacity 0.28s ease;
+}
+
+.works-modal.is-open {
+    opacity: 1;
 }
 
 .works-modal[hidden] {
@@ -1063,6 +1358,7 @@ textarea {
     inset: 0;
     background: rgba(3, 16, 28, 0.82);
     backdrop-filter: blur(4px);
+    transition: background-color 0.28s ease, backdrop-filter 0.28s ease;
 }
 
 .works-modal__dialog {
@@ -1075,13 +1371,14 @@ textarea {
     border-radius: 30px;
     background: linear-gradient(140deg, rgba(7, 36, 58, 0.98) 0%, rgba(5, 28, 46, 0.98) 100%);
     box-shadow: 0 24px 70px rgba(0, 0, 0, 0.45);
-    transform: translateY(8px);
+    transform: translateY(18px) scale(0.985);
     opacity: 0;
-    transition: transform 0.25s ease, opacity 0.25s ease;
+    transition: transform 0.32s var(--motion-ease), opacity 0.28s ease;
+    scroll-behavior: smooth;
 }
 
 .works-modal.is-open .works-modal__dialog {
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
     opacity: 1;
 }
 
@@ -1120,7 +1417,7 @@ textarea {
 .works-modal__content {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     gap: 16px;
     padding: 56px;
     direction: rtl;
@@ -1143,6 +1440,167 @@ textarea {
     color: var(--color-text-muted);
     font-size: 20px;
     line-height: 1.6;
+    white-space: pre-line;
+}
+
+.works-modal__subtitle {
+    margin: -12px 0 0;
+    max-width: 520px;
+    color: var(--color-accent);
+    font-family: "Open Sans Hebrew", Arial, sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.5;
+}
+
+.works-modal__highlight-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    width: 100%;
+    max-width: 560px;
+}
+
+.works-modal__highlight-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-height: 142px;
+    margin: 0;
+    padding: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.works-modal__highlight-marker {
+    width: 28px;
+    height: 3px;
+    border-radius: 999px;
+    background: var(--color-accent);
+}
+
+.works-modal__highlight-title,
+.works-modal__highlight-text,
+.works-modal__section-title {
+    margin: 0;
+}
+
+.works-modal__highlight-title,
+.works-modal__section-title {
+    color: #ffffff;
+    font-family: "Open Sans Hebrew", Arial, sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 1.4;
+}
+
+.works-modal__highlight-text {
+    color: var(--color-text-muted);
+    font-size: 15px;
+    line-height: 1.65;
+}
+
+.works-modal__section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    max-width: 560px;
+}
+
+.works-modal__section--special {
+    padding: 16px;
+    border: 1px solid rgba(255, 145, 0, 0.22);
+    border-radius: 10px;
+    background: linear-gradient(135deg, rgba(255, 145, 0, 0.1), rgba(255, 255, 255, 0.04));
+}
+
+.works-modal__special-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.works-modal__special-card {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-height: 118px;
+    margin: 0;
+    padding: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 8px;
+    background: rgba(2, 20, 34, 0.38);
+}
+
+.works-modal__special-title,
+.works-modal__special-text {
+    margin: 0;
+}
+
+.works-modal__special-title {
+    color: #ffffff;
+    font-family: "Open Sans Hebrew", Arial, sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.4;
+}
+
+.works-modal__special-text {
+    color: var(--color-text-muted);
+    font-size: 14px;
+    line-height: 1.55;
+}
+
+.works-modal__features {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.works-modal__feature {
+    position: relative;
+    padding: 10px 28px 10px 12px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--color-text-muted);
+    font-size: 15px;
+    line-height: 1.45;
+}
+
+.works-modal__feature::before {
+    content: "";
+    position: absolute;
+    top: 18px;
+    right: 12px;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--color-accent);
+}
+
+.works-modal__tags {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 8px;
+    width: 100%;
+    max-width: 560px;
+}
+
+.works-modal__tag {
+    padding: 6px 10px;
+    border: 1px solid rgba(255, 145, 0, 0.65);
+    border-radius: 999px;
+    color: var(--color-accent);
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.3;
 }
 
 .works-modal__media {
@@ -1180,6 +1638,10 @@ textarea {
     width: 100%;
     height: 100%;
     object-fit: cover;
+}
+
+.works-modal__slide .works-modal__image--contain {
+    object-fit: contain;
 }
 
 .works-modal__controls {
@@ -1229,11 +1691,19 @@ textarea {
     border-radius: 999px;
     background: rgba(255, 255, 255, 0.4);
     cursor: pointer;
+    transition: width 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
 }
 
 .works-modal__dot.is-active {
     width: 24px;
     background: var(--color-accent);
+}
+
+.works-modal__dot:hover,
+.works-modal__dot:focus-visible {
+    background: #ffffff;
+    outline: none;
+    transform: scale(1.2);
 }
 
 .works-modal-open {
@@ -1251,9 +1721,11 @@ textarea {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    gap: 134px;
+    gap: 0;
     direction: ltr;
-    width: 100%;
+    width: 1330px;
+    max-width: 100%;
+    margin: 0 auto;
     height: 501px;
 }
 
@@ -1290,11 +1762,16 @@ textarea {
     direction: ltr;
 }
 
+.contact-form__row--single {
+    grid-template-columns: 1fr;
+}
+
 .contact-form__field {
     position: relative;
     z-index: 1;
     display: flex;
     flex-direction: column;
+    align-items: flex-end;
     gap: 8px;
 }
 
@@ -1305,33 +1782,50 @@ textarea {
 }
 
 .contact-form__field--message {
+    align-items: stretch;
     height: 141px;
 }
 
 .contact-form__label {
     color: #eeeeee;
-    font-family: "Open Sans Hebrew Condensed", Arial, sans-serif;
-    font-size: 14px;
+    font-family: "Evo About Hebrew Condensed", "Open Sans Hebrew Condensed", Arial, sans-serif;
+    font-size: 18px;
     font-weight: 700;
     line-height: 20px;
+    text-align: right;
+    white-space: nowrap;
+    font-synthesis: none;
+}
+
+.contact-form__field--message .contact-form__label {
+    align-self: flex-end;
+    width: 100%;
+    font-size: 14px;
+    line-height: 20px;
+    text-align: right;
 }
 
 .contact-form input,
 .contact-form textarea,
 .contact-form__phone-wrap {
     width: 100%;
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-input);
+    border: 1px solid #dddedf;
+    border-radius: 24px;
     background: rgba(255, 255, 255, 0.1);
     color: #ffffff;
+    font-family: "Evo About Hebrew", "Open Sans Hebrew", Arial, sans-serif;
     font-size: 14px;
     line-height: 20px;
+    font-weight: 400;
+    font-synthesis: none;
+    box-shadow: none;
+    appearance: none;
 }
 
 .contact-form input,
 .contact-form__phone-wrap {
     height: 48px;
-    padding: 12px 8px;
+    padding: 12px 16px;
 }
 
 .contact-form input,
@@ -1344,34 +1838,41 @@ textarea {
 .contact-form input::placeholder,
 .contact-form textarea::placeholder {
     color: var(--color-text-muted);
+    opacity: 1;
 }
 
 .contact-form__phone-wrap {
     display: flex;
     align-items: center;
-    padding: 0 8px;
     direction: ltr;
+    padding: 0 8px;
 }
 
 .contact-form__phone-wrap input {
     flex: 1;
-    height: 46px;
+    height: 100%;
     border: 0;
+    border-radius: 0;
     background: transparent;
-    padding: 12px 8px;
+    color: #ced6e0;
+    padding: 2px 8px;
+    appearance: none;
 }
 
 .contact-form__phone-prefix {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: 8px;
     height: 100%;
     padding: 0 4px 0 8px;
-    border-right: 1px solid rgba(221, 222, 223, 0.8);
-    color: var(--color-text-muted);
-    font-family: "Open Sans Hebrew", Arial, sans-serif;
+    border-left: 1px solid #dddedf;
+    border-right: 0;
+    color: #ced6e0;
+    font-family: "Evo About Hebrew", "Open Sans Hebrew", Arial, sans-serif;
     font-size: 14px;
     font-weight: 700;
+    line-height: 20px;
+    font-synthesis: none;
 }
 
 .contact-form__phone-prefix img {
@@ -1382,14 +1883,26 @@ textarea {
 .contact-form__textarea-wrap {
     position: relative;
     flex: 1;
+    width: 100%;
+    height: 113px;
+    padding: 12px 8px;
+    overflow: hidden;
+    border: 1px solid #dddedf;
+    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.1);
 }
 
 .contact-form textarea {
-    height: 113px;
-    padding: 12px 16px;
+    height: 100%;
+    padding: 0 8px;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
     resize: none;
     font-size: 12px;
     line-height: 16px;
+    overflow: hidden;
+    appearance: none;
 }
 
 .contact-form__textarea-handle {
@@ -1413,10 +1926,15 @@ textarea {
     display: inline-flex;
     align-items: center;
     gap: 8px;
+    color: #ffffff;
+    font-family: "Evo About Hebrew", "Open Sans Hebrew", Arial, sans-serif;
     font-size: 12px;
     line-height: 16px;
     cursor: pointer;
     direction: rtl;
+    white-space: nowrap;
+    font-weight: 400;
+    font-synthesis: none;
 }
 
 .contact-form__checkbox input {
@@ -1426,6 +1944,7 @@ textarea {
 }
 
 .contact-form__checkbox-box {
+    flex: 0 0 16px;
     width: 16px;
     height: 16px;
     border: 1px solid var(--color-border);
@@ -1452,8 +1971,8 @@ textarea {
     display: flex;
     flex-direction: column;
     gap: 20px;
-    width: 448px;
-    align-self: flex-end;
+    width: 100%;
+    align-self: stretch;
 }
 
 .contact-info__title,
@@ -1476,6 +1995,7 @@ textarea {
 .contact-info__list {
     display: flex;
     flex-direction: column;
+    align-items: flex-end;
     gap: 24px;
     width: 231px;
     margin-left: auto;
@@ -1487,21 +2007,34 @@ textarea {
     align-items: center;
     justify-content: flex-end;
     gap: 12px;
+    width: 290px;
+    height: 70px;
     padding: 20px;
     border-radius: 34px;
-    background: var(--color-panel);
+    background: #07243a;
     direction: ltr;
-    min-height: 68px;
+    min-height: 70px;
 }
 
 .contact-info__value {
-    font-size: 16px;
+    font-family: "Evo About Hebrew", "Open Sans Hebrew", Arial, sans-serif;
+    font-size: 22px;
     font-weight: 700;
     line-height: 28px;
     direction: ltr;
     text-align: right;
     unicode-bidi: isolate;
     white-space: nowrap;
+    font-synthesis: none;
+}
+
+.contact-info__item:nth-child(2) .contact-info__value {
+    font-size: 20px;
+}
+
+.contact-info__item:nth-child(2) {
+    align-items: flex-start;
+    border-radius: 36px;
 }
 
 .contact-info__icon {
@@ -1533,93 +2066,327 @@ textarea {
 .landing-footer {
     margin-right: calc(var(--content-gutter) * -1);
     margin-left: calc(var(--content-gutter) * -1);
-    margin-top: -44px;
-    padding: 32px 55px;
+    margin-top: 0;
+    padding: 22px 38px 22px 40px;
 }
 
 .landing-footer__card {
     display: flex;
     flex-direction: column;
-    gap: 71px;
-    padding: 64px 48px 32px;
+    gap: 0;
+    min-height: 589px;
+    padding: 30px 34px 24px;
     border-radius: var(--radius-card);
     background: #ffffff;
     color: var(--color-text-dark);
-    min-height: 589px;
     width: 100%;
 }
 
 .landing-footer__top,
 .landing-footer__bottom {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: space-between;
-    gap: 40px;
     direction: ltr;
 }
 
-.landing-footer__columns {
-    display: flex;
-    gap: 123px;
-    align-items: flex-start;
+.landing-footer__top {
+    gap: 76px;
 }
 
-.landing-footer__column {
-    direction: rtl;
-}
-
-.landing-footer__column-title {
-    margin: 0 0 29px;
-    font-family: "Open Sans Hebrew Condensed", Arial, sans-serif;
-    font-size: 24px;
-    font-weight: 400;
-    line-height: 32px;
-    color: var(--color-text-dark);
-}
-
-.landing-footer__column:last-child .landing-footer__links {
-    gap: 15px;
-}
-
-.landing-footer__links {
+.landing-footer__form {
+    position: relative;
     display: flex;
     flex-direction: column;
-    gap: 19px;
-    margin: 0;
-    padding: 0;
-    list-style: none;
+    align-items: flex-end;
+    gap: 24px;
+    width: min(699px, 100%);
+    max-width: 700px;
+    min-height: 433px;
+    padding: 44px;
+    overflow: hidden;
+    border-radius: 34px;
+    direction: rtl;
 }
 
-.landing-footer__link {
-    color: var(--color-text-soft);
+.landing-footer__form-background {
+    position: absolute;
+    top: -3.55%;
+    left: -164.86%;
+    width: 270.7%;
+    height: 172.88%;
+    max-width: none;
+    object-fit: cover;
+}
+
+.landing-footer__form-row {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+    width: 100%;
+    direction: ltr;
+}
+
+.landing-footer__form-row--single {
+    grid-template-columns: 1fr;
+}
+
+.landing-footer__field {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+    width: 100%;
+}
+
+.landing-footer__field-label {
+    color: #eeeeee;
+    font-family: "Evo About Hebrew Condensed", "Open Sans Hebrew Condensed", Arial, sans-serif;
     font-size: 18px;
     font-weight: 700;
-    line-height: 28px;
+    line-height: 20px;
+    text-align: right;
+    white-space: nowrap;
+    font-synthesis: none;
 }
 
-.landing-footer__link.is-active {
+.landing-footer__field--message .landing-footer__field-label {
+    width: 100%;
+    font-size: 14px;
+    text-align: right;
+}
+
+.landing-footer__field input,
+.landing-footer__field textarea,
+.landing-footer__phone-wrap {
+    width: 100%;
+    border: 1px solid #dddedf;
+    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    font-family: "Evo About Hebrew", "Open Sans Hebrew", Arial, sans-serif;
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 400;
+    font-synthesis: none;
+    box-shadow: none;
+    appearance: none;
+    transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.landing-footer__field input,
+.landing-footer__phone-wrap {
+    height: 48px;
+    padding: 12px 16px;
+}
+
+.landing-footer__field input,
+.landing-footer__field textarea {
+    outline: 0;
+    direction: rtl;
+    text-align: right;
+}
+
+.landing-footer__field:focus-within .landing-footer__field-label {
+    color: #ffffff;
+}
+
+.landing-footer__field input:focus,
+.landing-footer__field textarea:focus,
+.landing-footer__phone-wrap:focus-within,
+.landing-footer__textarea-wrap:focus-within {
+    border-color: rgba(255, 145, 0, 0.86);
+    background: rgba(255, 255, 255, 0.14);
+    box-shadow: var(--focus-ring);
+}
+
+.landing-footer__field input::placeholder,
+.landing-footer__field textarea::placeholder {
+    color: var(--color-text-muted);
+    opacity: 1;
+}
+
+.landing-footer__phone-wrap {
+    display: flex;
+    align-items: center;
+    direction: ltr;
+    padding: 0 8px;
+}
+
+.landing-footer__phone-wrap input {
+    flex: 1;
+    height: 100%;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: #ced6e0;
+    padding: 2px 8px;
+    appearance: none;
+}
+
+.landing-footer__phone-prefix {
     display: inline-flex;
     align-items: center;
-    gap: 2px;
-    direction: rtl;
-    color: var(--color-accent);
+    gap: 8px;
+    height: 100%;
+    padding: 0 4px 0 8px;
+    border-left: 1px solid #dddedf;
+    border-right: 0;
+    color: #ced6e0;
+    font-family: "Evo About Hebrew", "Open Sans Hebrew", Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 20px;
+    font-synthesis: none;
 }
 
-.landing-footer__link.is-active::after {
-    content: "";
-    width: 28px;
-    height: 28px;
-    flex: 0 0 28px;
+.landing-footer__phone-prefix img {
+    width: 8px;
+    height: 4px;
+}
+
+.landing-footer__field--message {
+    height: 141px;
+}
+
+.landing-footer__textarea-wrap {
+    position: relative;
+    flex: 1;
+    width: 100%;
+    height: 113px;
+    padding: 12px 8px;
+    overflow: hidden;
+    border: 1px solid #dddedf;
+    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.1);
+    transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.landing-footer__field textarea {
+    height: 100%;
+    padding: 0 8px;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    resize: none;
+    font-size: 12px;
+    line-height: 16px;
+    overflow: hidden;
+    appearance: none;
+}
+
+.landing-footer__textarea-handle {
+    position: absolute;
+    bottom: 3px;
+    left: 2px;
+    width: 8px;
+    height: 8px;
+}
+
+.landing-footer__form-footer {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    direction: ltr;
+}
+
+.landing-footer__submit {
+    display: inline-flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 48px;
+    padding: 12px 16px;
+    border: 0;
+    border-radius: 24px;
+    background: var(--color-accent);
+    color: #ffffff;
+    font-family: "Evo About Hebrew", "Open Sans Hebrew", Arial, sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 24px;
+    font-synthesis: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.landing-footer__submit:hover,
+.landing-footer__submit:focus-visible {
+    background: #ff9d1f;
+    box-shadow: 0 0 0 5px rgba(255, 145, 0, 0.16), 0 14px 28px rgba(0, 0, 0, 0.18);
+    outline: none;
+}
+
+.landing-footer__submit:active {
+    transform: translateY(1px);
+}
+
+.landing-footer__submit img {
+    width: 24px;
+    height: 24px;
+    transform: rotate(180deg);
+}
+
+.landing-footer__checkbox {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #ffffff;
+    font-family: "Evo About Hebrew", "Open Sans Hebrew", Arial, sans-serif;
+    font-size: 12px;
+    line-height: 16px;
+    cursor: pointer;
+    direction: rtl;
+    white-space: nowrap;
+    font-weight: 400;
+    font-synthesis: none;
+}
+
+.landing-footer__checkbox a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.landing-footer__checkbox input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.landing-footer__checkbox-box {
+    flex: 0 0 16px;
+    width: 16px;
+    height: 16px;
+    border: 1px solid var(--color-border);
+    border-radius: 2px;
+    background: #ffffff;
+    transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.landing-footer__checkbox input:checked + .landing-footer__checkbox-box {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+}
+
+.landing-footer__checkbox input:focus-visible + .landing-footer__checkbox-box {
+    box-shadow: var(--focus-ring);
 }
 
 .landing-footer__brand-area {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    width: 402px;
-    min-height: 285px;
+    align-items: flex-start;
+    width: 496px;
     direction: rtl;
-    align-items: flex-end;
 }
 
 .landing-footer__brand {
@@ -1662,56 +2429,86 @@ textarea {
     max-width: none;
 }
 
-.landing-footer__subscribe {
+.landing-footer__intro {
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    width: 401.88px;
+    gap: 20px;
+    width: 448px;
+    margin-top: 22px;
 }
 
-.landing-footer__subscribe-label {
-    font-size: 16px;
-    font-weight: 700;
-    line-height: 24px;
+.landing-footer__headline,
+.landing-footer__text {
+    margin: 0;
+    color: var(--color-accent);
     text-align: right;
 }
 
-.landing-footer__subscribe-row {
+.landing-footer__headline {
+    font-family: "Open Sans Hebrew Condensed", Arial, sans-serif;
+    font-size: 48px;
+    font-weight: 700;
+    line-height: 56px;
+}
+
+.landing-footer__text {
+    font-size: 20px;
+    line-height: 28px;
+}
+
+.landing-footer__contact-list {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    width: 290px;
+    margin-top: 24px;
+}
+
+.landing-footer__contact-item {
     display: flex;
     align-items: center;
-    gap: 8px;
+    justify-content: flex-end;
+    gap: 12px;
+    width: 100%;
+    height: 50px;
+    padding: 11px 20px;
+    border-radius: 34px;
+    background: #07243a;
     direction: ltr;
+    text-decoration: none;
+    transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
-.landing-footer__subscribe-row button,
-.landing-footer__subscribe-row input {
-    height: 48px;
-    border: 1px solid var(--color-border);
-    border-radius: 24px;
+.landing-footer__contact-item:hover,
+.landing-footer__contact-item:focus-visible {
+    background: #0b304d;
+    box-shadow: 0 0 0 4px rgba(255, 145, 0, 0.12);
+    outline: none;
+    transform: translateY(-1px);
 }
 
-.landing-footer__subscribe-row button {
-    min-width: 111px;
-    padding: 12px 24px;
-    background: transparent;
-    color: var(--color-text-dark);
-    font-family: "Open Sans Hebrew", Arial, sans-serif;
-    font-size: 16px;
+.landing-footer__contact-item:active {
+    transform: translateY(1px);
+}
+
+.landing-footer__contact-value {
+    font-family: "Evo About Hebrew", "Open Sans Hebrew", Arial, sans-serif;
+    font-size: 18px;
     font-weight: 700;
-    cursor: pointer;
-}
-
-.landing-footer__subscribe-row input {
-    flex: 1;
-    padding: 12px 16px;
-    color: var(--color-text-dark);
-    background: #ffffff;
-    min-width: 0;
+    line-height: 28px;
+    color: #ffffff;
+    direction: ltr;
+    text-align: right;
+    unicode-bidi: isolate;
+    white-space: nowrap;
+    font-synthesis: none;
 }
 
 .landing-footer__bottom {
     align-items: center;
-    padding-top: 32px;
+    margin-top: 17px;
+    padding-top: 23px;
     border-top: 1px solid var(--color-border);
 }
 
@@ -1745,6 +2542,20 @@ textarea {
     border: 1px solid #ffffff;
     border-radius: 50px;
     background: var(--color-bg);
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.landing-footer__social:hover,
+.landing-footer__social:focus-visible {
+    background: #0b304d;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 4px rgba(255, 145, 0, 0.12);
+    outline: none;
+    transform: translateY(-2px);
+}
+
+.landing-footer__social:active {
+    transform: translateY(1px);
 }
 
 .landing-footer__social img {
@@ -1758,4 +2569,10 @@ textarea {
 
 .landing-footer__legal a {
     text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.landing-footer__legal a:hover,
+.landing-footer__legal a:focus-visible {
+    color: var(--color-bg);
 }
