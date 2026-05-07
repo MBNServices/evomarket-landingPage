@@ -444,7 +444,9 @@ $rows = array(
                 'modal_title'       => 'OtLesegula - אות לסגולה',
                 'modal_description' => $otlesegula_modal,
                 'modal_images'      => array(
-                    array('image' => 'project-otlesegula.png', 'alt' => 'OtLesegula - אות לסגולה'),
+                    array('image' => 'project-otlesegula-gallery-01.png', 'alt' => 'OtLesegula - מסך סיכום בחירה והקדשה', 'fit' => 'contain'),
+                    array('image' => 'project-otlesegula-gallery-02.png', 'alt' => 'OtLesegula - מסך ראשי וחיפוש הקדשה', 'fit' => 'contain'),
+                    array('image' => 'project-otlesegula-gallery-03.png', 'alt' => 'OtLesegula - מסך סגולות בחירה', 'fit' => 'contain'),
                 ),
             ),
             array(
@@ -458,7 +460,11 @@ $rows = array(
                 'modal_title'       => 'SuperCatalog - סופר קטלוג',
                 'modal_description' => $supercatalog_modal,
                 'modal_images'      => array(
-                    array('image' => 'project-supercatalog.png', 'alt' => 'SuperCatalog - סופר קטלוג'),
+                    array('image' => 'project-supercatalog-card.png', 'alt' => 'SuperCatalog - מסך סריקה וחיפוש מוצרים', 'fit' => 'contain'),
+                    array('image' => 'project-supercatalog-gallery-01.png', 'alt' => 'SuperCatalog - מסך הזמנות מוצרים', 'fit' => 'contain'),
+                    array('image' => 'project-supercatalog-gallery-02.png', 'alt' => 'SuperCatalog - מסך סריקת ברקוד', 'fit' => 'contain'),
+                    array('image' => 'project-supercatalog-gallery-03.png', 'alt' => 'SuperCatalog - מסך ספירת מלאי', 'fit' => 'contain'),
+                    array('image' => 'project-supercatalog-gallery-04.png', 'alt' => 'SuperCatalog - היסטוריית הזמנות ודוחות', 'fit' => 'contain'),
                 ),
             ),
         ),
@@ -477,7 +483,9 @@ $rows = array(
                 'modal_title'       => 'HalalitCar - חללית קאר',
                 'modal_description' => $halalitcar_modal,
                 'modal_images'      => array(
-                    array('image' => 'project-halalitcar.png', 'alt' => 'HalalitCar - חללית קאר', 'fit' => 'contain'),
+                    array('image' => 'project-halalitcar-gallery-01.png', 'alt' => 'HalalitCar - מסך קטגוריות רכבים', 'fit' => 'contain'),
+                    array('image' => 'project-halalitcar-gallery-02.png', 'alt' => 'HalalitCar - מסך ליסינג וסינון רכבים', 'fit' => 'contain'),
+                    array('image' => 'project-halalitcar-gallery-03.png', 'alt' => 'HalalitCar - מסך פרטי רכב', 'fit' => 'contain'),
                 ),
             ),
             array(
@@ -491,7 +499,11 @@ $rows = array(
                 'modal_title'       => 'MedicalHerbs - המרכז לרפואה טבעית',
                 'modal_description' => $medicalherbs_modal,
                 'modal_images'      => array(
-                    array('image' => 'project-medicalherbs.png', 'alt' => 'MedicalHerbs - המרכז לרפואה טבעית'),
+                    array('image' => 'project-medicalherbs-gallery-01.png', 'alt' => 'MedicalHerbs - מסך תוכן קורס', 'fit' => 'contain'),
+                    array('image' => 'project-medicalherbs-gallery-02.png', 'alt' => 'MedicalHerbs - קטלוג תמציות צמחים', 'fit' => 'contain'),
+                    array('image' => 'project-medicalherbs-gallery-03.png', 'alt' => 'MedicalHerbs - פלטפורמת למידה ואזור אישי', 'fit' => 'contain'),
+                    array('image' => 'project-medicalherbs-gallery-04.png', 'alt' => 'MedicalHerbs - עמוד מרכז לרפואה טבעית', 'fit' => 'contain'),
+                    array('image' => 'project-medicalherbs-gallery-05.png', 'alt' => 'MedicalHerbs - מאמר תוספי תזונה', 'fit' => 'contain'),
                 ),
             ),
         ),
@@ -533,26 +545,13 @@ $rows = array(
 ?>
 
 <section class="works-section" id="works" aria-labelledby="works-title">
-    <h2 class="visually-hidden" id="works-title">עבודות</h2>
     <div class="works-section__heading reveal reveal-fade" aria-hidden="true">WORKS</div>
+    <h2 class="works-section__title reveal reveal-up" id="works-title">קצת מהעבודות שלנו...</h2>
 
     <div class="works-section__rows">
         <?php foreach ($rows as $row_index => $row) : ?>
-            <?php
-            $has_title = isset($row['title']) && trim((string) $row['title']) !== '';
-            ?>
             <section class="works-row reveal reveal-up" aria-labelledby="works-row-<?php echo esc_attr($row_index + 1); ?>" style="--reveal-index: <?php echo esc_attr($row_index); ?>;">
-                <?php if ($has_title) : ?>
-                    <header class="works-row__header">
-                        <?php if ($has_title) : ?>
-                            <h2 class="works-row__title" id="works-row-<?php echo esc_attr($row_index + 1); ?>">
-                                <?php echo esc_html($row['title']); ?>
-                            </h2>
-                        <?php endif; ?>
-                    </header>
-                <?php else : ?>
-                    <span class="visually-hidden" id="works-row-<?php echo esc_attr($row_index + 1); ?>">עבודות</span>
-                <?php endif; ?>
+                <span class="visually-hidden" id="works-row-<?php echo esc_attr($row_index + 1); ?>">עבודות</span>
 
                 <div class="works-row__grid">
                     <?php foreach ($row['projects'] as $project_index => $project) : ?>

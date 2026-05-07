@@ -24,6 +24,8 @@ $footer_contact_items = array(
     ),
 );
 
+$contact_notice = function_exists('evomarket_get_contact_form_notice') ? evomarket_get_contact_form_notice() : null;
+
 $social_icons = array(
     array(
         'icon'  => 'x',
@@ -56,8 +58,15 @@ $social_icons = array(
 <section class="landing-footer" id="contact" aria-label="<?php esc_attr_e('Footer', 'evomarket'); ?>">
     <div class="landing-footer__card">
         <div class="landing-footer__top">
-            <form class="landing-footer__form landing-form reveal reveal-up" action="<?php echo esc_url('mailto:' . $footer_email); ?>" method="post" enctype="text/plain" data-footer-mailto="<?php echo esc_attr($footer_email); ?>">
+            <form class="landing-footer__form landing-form reveal reveal-up" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" method="post" data-contact-form>
                 <img class="landing-footer__form-background" src="<?php echo esc_url($asset_base . '/contact-bg.png'); ?>" alt="" aria-hidden="true">
+                <input type="hidden" name="action" value="evomarket_contact_submit">
+                <?php wp_nonce_field('evomarket_contact_submit', 'evomarket_contact_nonce'); ?>
+                <input type="hidden" name="evomarket_contact_started_at" value="<?php echo esc_attr(time()); ?>">
+                <label class="visually-hidden" aria-hidden="true">
+                    Website
+                    <input type="text" name="evomarket_contact_website" value="" tabindex="-1" autocomplete="off">
+                </label>
 
                 <div class="landing-footer__form-row">
                     <label class="landing-footer__field">
@@ -67,7 +76,7 @@ $social_icons = array(
 
                     <label class="landing-footer__field">
                         <span class="landing-footer__field-label">שם מלא</span>
-                        <input type="text" name="footer_full_name" placeholder="לדוגמא: שלמה ארצי">
+                        <input type="text" name="footer_full_name" required placeholder="לדוגמא: שלמה ארצי">
                     </label>
                 </div>
 
@@ -75,7 +84,7 @@ $social_icons = array(
                     <label class="landing-footer__field">
                         <span class="landing-footer__field-label">טלפון</span>
                         <span class="landing-footer__phone-wrap">
-                            <input type="tel" name="footer_phone" value="052-890-4501">
+                            <input type="tel" name="footer_phone" required value="052-890-4501">
                             <span class="landing-footer__phone-prefix" aria-hidden="true">
                                 <img src="<?php echo esc_url($asset_base . '/icon-phone-caret.svg'); ?>" alt="">
                                 <span>IL</span>
@@ -87,11 +96,18 @@ $social_icons = array(
                 <label class="landing-footer__field landing-footer__field--message">
                     <span class="landing-footer__field-label">הודעה</span>
                     <span class="landing-footer__textarea-wrap">
-                        <textarea name="footer_message" rows="5" placeholder="שניה לפני שאנחנו מדברים, נשמח שתספר/י לנו בקצרה כיצד נוכל לעזור לך (-:"></textarea>
+                        <textarea name="footer_message" required rows="5" placeholder="שניה לפני שאנחנו מדברים, נשמח שתספר/י לנו בקצרה כיצד נוכל לעזור לך (-:"></textarea>
                         <img class="landing-footer__textarea-handle" src="<?php echo esc_url($asset_base . '/icon-textarea-handle.svg'); ?>" alt="" aria-hidden="true">
                     </span>
                 </label>
 
+                <div
+                    class="landing-footer__form-status<?php echo $contact_notice ? ' is-visible is-' . esc_attr($contact_notice['type']) : ''; ?>"
+                    role="status"
+                    aria-live="polite"
+                    data-contact-status
+                    <?php echo $contact_notice ? '' : 'hidden'; ?>
+                ><?php echo $contact_notice ? esc_html($contact_notice['message']) : ''; ?></div>
                 <div class="landing-footer__form-footer">
                     <button class="landing-footer__submit" type="submit">
                         <span>שליחת הודעה</span>
@@ -99,7 +115,7 @@ $social_icons = array(
                     </button>
 
                     <label class="landing-footer__checkbox">
-                        <input type="checkbox" name="footer_terms">
+                        <input type="checkbox" name="footer_terms" required>
                         <span class="landing-footer__checkbox-box" aria-hidden="true"></span>
                         <span>אני מקבל את <a href="<?php echo esc_url($terms_url); ?>">תנאים שימוש</a></span>
                     </label>

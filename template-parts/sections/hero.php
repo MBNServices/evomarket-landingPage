@@ -57,11 +57,17 @@ $service_cards = array(
                 <p class="hero-content__welcome">ברוכים הבאים</p>
                 <div class="hero-content__stack">
                     <h1 class="hero-content__title reveal reveal-scale" id="hero-title" style="--reveal-delay: 160ms;">
-                        <img
-                            class="hero-content__title-image"
-                            src="<?php echo esc_url($asset_base . '/hero-title.png'); ?>"
-                            alt="EVO MARKET"
-                        >
+                        <picture>
+                            <source
+                                media="(max-width: 560px)"
+                                srcset="<?php echo esc_url($asset_base . '/hero-title-mobile.png'); ?>"
+                            >
+                            <img
+                                class="hero-content__title-image"
+                                src="<?php echo esc_url($asset_base . '/hero-title.png'); ?>"
+                                alt="EVO MARKET"
+                            >
+                        </picture>
                     </h1>
                     <p class="hero-content__subtitle">פתרונות דיגיטליים חכמים: אתרים, חנויות ומערכות מתקדמות</p>
                 </div>

@@ -14,6 +14,10 @@ document.addEventListener("DOMContentLoaded", function () {
         if (typeof setClientsMarquee === "function") {
             setClientsMarquee();
         }
+
+        if (typeof setHeroServicesAutoAdvance === "function") {
+            setHeroServicesAutoAdvance();
+        }
     }
 
     if (reduceMotionQuery.addEventListener) {
@@ -63,26 +67,117 @@ document.addEventListener("DOMContentLoaded", function () {
     setHeaderScrollState();
     window.addEventListener("scroll", setHeaderScrollState, { passive: true });
 
-    document.querySelectorAll(".landing-form, .footer-subscribe").forEach(function (form) {
+    document.querySelectorAll(".footer-subscribe").forEach(function (form) {
         form.addEventListener("submit", function (event) {
-            if (form.classList.contains("landing-footer__form")) {
-                var recipient = form.getAttribute("data-footer-mailto");
-                var fields = Array.prototype.slice.call(form.elements).filter(function (field) {
-                    return field.name && field.type !== "checkbox";
-                });
-                var body = fields.map(function (field) {
-                    return field.name + ": " + field.value;
-                }).join("\n");
-
-                event.preventDefault();
-                window.location.href = "mailto:" + recipient + "?subject=" + encodeURIComponent("פניה חדשה מאתר EvoMarket") + "&body=" + encodeURIComponent(body);
-                return;
-            }
-
             event.preventDefault();
         });
     });
 
+    document.querySelectorAll("[data-contact-form]").forEach(function (form) {
+        var statusEl = form.querySelector("[data-contact-status]");
+        var submitButton = form.querySelector(".landing-footer__submit");
+        var submitLabel = submitButton ? submitButton.querySelector("span") : null;
+        var defaultSubmitText = submitLabel ? submitLabel.textContent : "";
+
+        function setStatus(type, message) {
+            if (!statusEl) {
+                return;
+            }
+
+            statusEl.hidden = false;
+            statusEl.textContent = message || "";
+            statusEl.classList.remove("is-success", "is-error", "is-loading", "is-visible");
+            statusEl.classList.add("is-visible", "is-" + type);
+        }
+
+        function clearStatus() {
+            if (!statusEl) {
+                return;
+            }
+
+            statusEl.hidden = true;
+            statusEl.textContent = "";
+            statusEl.classList.remove("is-success", "is-error", "is-loading", "is-visible");
+        }
+
+        function setLoading(isLoading) {
+            form.classList.toggle("is-submitting", isLoading);
+
+            if (submitButton) {
+                submitButton.disabled = isLoading;
+                submitButton.setAttribute("aria-busy", isLoading ? "true" : "false");
+            }
+
+            if (submitLabel) {
+                submitLabel.textContent = isLoading && window.evomarketContact ? window.evomarketContact.messages.loading : defaultSubmitText;
+            }
+        }
+
+        function clearFieldErrors() {
+            Array.prototype.slice.call(form.elements).forEach(function (field) {
+                if (field.name) {
+                    field.removeAttribute("aria-invalid");
+                }
+            });
+        }
+
+        function markFieldErrors(fields) {
+            (fields || []).forEach(function (fieldName) {
+                var field = form.elements[fieldName];
+
+                if (field) {
+                    field.setAttribute("aria-invalid", "true");
+                }
+            });
+        }
+
+        form.addEventListener("submit", function (event) {
+            if (!window.fetch || !window.FormData || !window.evomarketContact) {
+                return;
+            }
+
+            event.preventDefault();
+            clearStatus();
+            clearFieldErrors();
+            setStatus("loading", window.evomarketContact.messages.loading);
+            setLoading(true);
+
+            window.fetch(window.evomarketContact.ajaxUrl, {
+                method: "POST",
+                credentials: "same-origin",
+                body: new FormData(form)
+            })
+                .then(function (response) {
+                    return response.json().catch(function () {
+                        return {
+                            success: false,
+                            data: {
+                                message: window.evomarketContact.messages.error,
+                                fields: []
+                            }
+                        };
+                    });
+                })
+                .then(function (payload) {
+                    var data = payload && payload.data ? payload.data : {};
+
+                    if (!payload || !payload.success) {
+                        markFieldErrors(data.fields || []);
+                        setStatus("error", data.message || window.evomarketContact.messages.error);
+                        return;
+                    }
+
+                    form.reset();
+                    setStatus("success", data.message || "");
+                })
+                .catch(function () {
+                    setStatus("error", window.evomarketContact.messages.error);
+                })
+                .finally(function () {
+                    setLoading(false);
+                });
+        });
+    });
     var menuToggle = document.querySelector(".site-header__menu-toggle");
     var navLinks = document.querySelectorAll(".site-header__menu a");
     var navTargets = Array.prototype.slice.call(navLinks).map(function (link) {
@@ -112,6 +207,95 @@ document.addEventListener("DOMContentLoaded", function () {
                 menuToggle.setAttribute("aria-expanded", "false");
             });
         });
+    }
+
+    var heroServices = document.querySelector(".hero-services");
+    var heroServicesMobileQuery = window.matchMedia("(max-width: 560px)");
+    var heroServicesTimer = null;
+    var heroServicesIndex = 0;
+    var heroServicesStopped = false;
+    var heroServicesResizeTimer = null;
+
+    function getHeroServiceCards() {
+        if (!heroServices) {
+            return [];
+        }
+
+        return Array.prototype.slice.call(heroServices.querySelectorAll(".service-card")).sort(function (cardA, cardB) {
+            var orderA = parseInt(window.getComputedStyle(cardA).order, 10) || 0;
+            var orderB = parseInt(window.getComputedStyle(cardB).order, 10) || 0;
+
+            if (orderA === orderB) {
+                return Array.prototype.indexOf.call(heroServices.children, cardA) - Array.prototype.indexOf.call(heroServices.children, cardB);
+            }
+
+            return orderA - orderB;
+        });
+    }
+
+    function getHeroServiceOffset(card) {
+        return card.offsetLeft - heroServices.offsetLeft - parseFloat(window.getComputedStyle(heroServices).paddingLeft || "0");
+    }
+
+    function clearHeroServicesTimer() {
+        window.clearTimeout(heroServicesTimer);
+        heroServicesTimer = null;
+    }
+
+    function stopHeroServicesAutoAdvance() {
+        heroServicesStopped = true;
+        clearHeroServicesTimer();
+    }
+
+    function scheduleHeroServicesAutoAdvance() {
+        clearHeroServicesTimer();
+
+        if (!heroServices || !heroServicesMobileQuery.matches || reduceMotion || heroServicesStopped) {
+            return;
+        }
+
+        var cards = getHeroServiceCards();
+
+        if (heroServicesIndex >= cards.length - 1) {
+            return;
+        }
+
+        heroServicesTimer = window.setTimeout(function () {
+            cards = getHeroServiceCards();
+            heroServicesIndex += 1;
+
+            if (!cards[heroServicesIndex]) {
+                clearHeroServicesTimer();
+                return;
+            }
+
+            heroServices.scrollTo({
+                left: getHeroServiceOffset(cards[heroServicesIndex]),
+                behavior: "smooth"
+            });
+
+            scheduleHeroServicesAutoAdvance();
+        }, 2000);
+    }
+
+    function setHeroServicesAutoAdvance() {
+        clearHeroServicesTimer();
+
+        if (!heroServices || !heroServicesMobileQuery.matches || reduceMotion || heroServicesStopped) {
+            return;
+        }
+
+        heroServicesIndex = 0;
+        heroServices.scrollLeft = 0;
+        scheduleHeroServicesAutoAdvance();
+    }
+
+    if (heroServices) {
+        ["touchstart", "pointerdown", "wheel"].forEach(function (eventName) {
+            heroServices.addEventListener(eventName, stopHeroServicesAutoAdvance, { passive: true });
+        });
+
+        setHeroServicesAutoAdvance();
     }
 
     if (navTargets.length && "IntersectionObserver" in window) {
@@ -146,7 +330,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     var clientsStrip = document.querySelector(".clients-strip");
     var clientsTrack = clientsStrip ? clientsStrip.querySelector(".clients-strip__track") : null;
-    var mobileQuery = window.matchMedia("(max-width: 560px)");
     var marqueeResizeTimer;
     var marqueeFrame;
     var marqueeOffset = 0;
@@ -194,7 +377,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function stepClientsMarquee(timestamp) {
-        if (!clientsStrip || !clientsTrack || !mobileQuery.matches) {
+        if (!clientsStrip || !clientsTrack || reduceMotion) {
             return;
         }
 
@@ -203,7 +386,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         var elapsed = Math.min(timestamp - marqueeLastTime, 32);
-        var speed = 0.04;
+        var speed = 0.045;
         var gap = getClientsMarqueeGap();
         var firstItem = clientsTrack.firstElementChild;
 
@@ -229,7 +412,7 @@ document.addEventListener("DOMContentLoaded", function () {
         marqueeFrame = null;
         marqueeLastTime = 0;
 
-        if (mobileQuery.matches && !reduceMotion) {
+        if (!reduceMotion) {
             resetClientsTrack();
             fillClientsMarqueeTrack();
             marqueeOffset = 0;
@@ -246,23 +429,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
     setClientsMarquee();
 
-    if (clientsTrack) {
-        clientsTrack.querySelectorAll("img").forEach(function (image) {
-            if (!image.complete) {
-                image.addEventListener("load", setClientsMarquee, { once: true });
-            }
-        });
-    }
-
-    if (mobileQuery.addEventListener) {
-        mobileQuery.addEventListener("change", setClientsMarquee);
-    } else if (mobileQuery.addListener) {
-        mobileQuery.addListener(setClientsMarquee);
-    }
-
     window.addEventListener("resize", function () {
         window.clearTimeout(marqueeResizeTimer);
         marqueeResizeTimer = window.setTimeout(setClientsMarquee, 120);
+        window.clearTimeout(heroServicesResizeTimer);
+        heroServicesResizeTimer = window.setTimeout(setHeroServicesAutoAdvance, 120);
     });
 
     var worksModal = document.querySelector("#works-project-modal");

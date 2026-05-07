@@ -902,13 +902,17 @@ textarea {
     padding: 0;
     display: flex;
     align-items: center;
+    overflow: hidden;
 }
 
 .clients-strip::before {
     content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(90deg, #051c2e 0%, rgba(5, 28, 46, 0.75) 11%, rgba(5, 28, 46, 0.12) 27%, rgba(5, 28, 46, 0.12) 73%, rgba(5, 28, 46, 0.75) 89%, #051c2e 100%);
+    z-index: 2;
+    background:
+        linear-gradient(90deg, #051c2e 0%, rgba(5, 28, 46, 0.92) 8%, rgba(5, 28, 46, 0.12) 24%, rgba(5, 28, 46, 0.12) 76%, rgba(5, 28, 46, 0.92) 92%, #051c2e 100%),
+        linear-gradient(180deg, rgba(255, 145, 0, 0.04), rgba(255, 255, 255, 0));
     pointer-events: none;
 }
 
@@ -917,35 +921,53 @@ textarea {
     z-index: 1;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 0;
-    width: 100%;
+    justify-content: flex-start;
+    gap: 18px;
+    width: max-content;
+    min-width: max-content;
     height: 100%;
     direction: ltr;
+    will-change: transform;
 }
 
 .clients-strip__item {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
-    opacity: 1;
-    filter: brightness(1.14) contrast(1.08);
+    flex: 0 0 auto;
+    min-height: 44px;
+    padding: 11px 20px 12px;
+    border: 1px solid rgba(206, 214, 224, 0.22);
+    border-radius: 999px;
+    background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.095), rgba(255, 255, 255, 0.035)),
+        rgba(7, 36, 58, 0.82);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.12),
+        0 12px 32px rgba(0, 0, 0, 0.16);
+    color: #ffffff;
+    font-family: "Evo About Hebrew", "Open Sans Hebrew", Arial, sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 20px;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    font-synthesis: none;
 }
 
-.clients-strip__item img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
+.clients-strip__item::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    margin-right: 10px;
+    border-radius: 50%;
+    background: #ff9100;
+    box-shadow: 0 0 14px rgba(255, 145, 0, 0.74);
 }
 
-.clients-strip__item:nth-child(1),
-.clients-strip__item:nth-child(8) {
-    opacity: 0.34;
-}
-
-.clients-strip__item:nth-child(2),
-.clients-strip__item:nth-child(7) {
-    opacity: 0.64;
+.clients-strip__label {
+    display: block;
 }
 
 .about-section {
@@ -1078,17 +1100,30 @@ textarea {
 
 .works-section__heading {
     position: absolute;
-    top: 0;
+    top: -26px;
     left: 0;
     right: 0;
     font-family: "Open Sans Hebrew Condensed", Arial, sans-serif;
     width: 100%;
-    font-size: 300px;
+    font-size: 270px;
     font-weight: 700;
-    line-height: 1.2;
+    line-height: 1;
     text-align: center;
-    color: rgba(255, 255, 255, 0.26);
+    color: rgba(255, 255, 255, 0.2);
     pointer-events: none;
+}
+
+.works-section__title {
+    position: relative;
+    z-index: 2;
+    margin: 126px 0 54px;
+    color: #ffffff;
+    font-family: "Open Sans Hebrew Condensed", Arial, sans-serif;
+    font-size: 58px;
+    font-weight: 700;
+    line-height: 1.12;
+    text-align: center;
+    direction: rtl;
 }
 
 .works-section__rows {
@@ -1107,7 +1142,7 @@ textarea {
 }
 
 .works-row:first-child {
-    padding-top: 161px;
+    padding-top: 0;
 }
 
 .works-row__header {
@@ -1195,7 +1230,8 @@ textarea {
 
 .project-card__media {
     position: relative;
-    height: 450px;
+    aspect-ratio: 1024 / 650;
+    height: auto;
     overflow: hidden;
     border-radius: 34px;
     background: rgba(255, 255, 255, 0.04);
@@ -1610,6 +1646,13 @@ textarea {
     justify-content: center;
     gap: 18px;
     padding: 28px;
+}
+
+@media (min-width: 769px) {
+    .works-modal__media {
+        justify-content: flex-start;
+        padding-top: 56px;
+    }
 }
 
 .works-modal__slider {
@@ -2204,6 +2247,15 @@ textarea {
     box-shadow: var(--focus-ring);
 }
 
+.landing-footer__field input[aria-invalid="true"],
+.landing-footer__field textarea[aria-invalid="true"],
+.landing-footer__phone-wrap:has(input[aria-invalid="true"]),
+.landing-footer__textarea-wrap:has(textarea[aria-invalid="true"]),
+.landing-footer__checkbox input[aria-invalid="true"] + .landing-footer__checkbox-box {
+    border-color: #ff6b6b;
+    box-shadow: 0 0 0 4px rgba(255, 107, 107, 0.18);
+}
+
 .landing-footer__field input::placeholder,
 .landing-footer__field textarea::placeholder {
     color: var(--color-text-muted);
@@ -2297,6 +2349,39 @@ textarea {
     direction: ltr;
 }
 
+.landing-footer__form-status {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 16px;
+    color: #ffffff;
+    font-family: "Evo About Hebrew", "Open Sans Hebrew", Arial, sans-serif;
+    font-size: 13px;
+    line-height: 18px;
+    text-align: right;
+    direction: rtl;
+}
+
+.landing-footer__form-status[hidden] {
+    display: none;
+}
+
+.landing-footer__form-status.is-success {
+    background: rgba(42, 166, 95, 0.24);
+    border: 1px solid rgba(126, 231, 164, 0.48);
+}
+
+.landing-footer__form-status.is-error {
+    background: rgba(214, 65, 65, 0.24);
+    border: 1px solid rgba(255, 137, 137, 0.48);
+}
+
+.landing-footer__form-status.is-loading {
+    background: rgba(255, 255, 255, 0.14);
+    border: 1px solid rgba(255, 255, 255, 0.34);
+}
+
 .landing-footer__submit {
     display: inline-flex;
     flex-direction: row-reverse;
@@ -2323,6 +2408,11 @@ textarea {
     background: #ff9d1f;
     box-shadow: 0 0 0 5px rgba(255, 145, 0, 0.16), 0 14px 28px rgba(0, 0, 0, 0.18);
     outline: none;
+}
+
+.landing-footer__submit:disabled {
+    cursor: wait;
+    opacity: 0.72;
 }
 
 .landing-footer__submit:active {
@@ -2452,6 +2542,7 @@ textarea {
 }
 
 .landing-footer__text {
+    color: #07243A;
     font-size: 20px;
     line-height: 28px;
 }
